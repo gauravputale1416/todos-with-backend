@@ -21,6 +21,23 @@ app.use(cors());
             createdAt: new Date().toISOString(),
             priority:"medium",
             emoji: "🛠️",
+        },
+        {
+            id:3,
+            task:"Ship",
+            done:false,
+            createdAt: new Date().toISOString(),
+            priority:"low",
+            emoji: "🚢",
+        },
+        {
+            id:4,
+            task:"Repeat",
+            done:false,
+            createdAt: new Date().toISOString(),
+            priority:"high",
+            emoji: "🔁"
+            ,
         }
     ]
 
