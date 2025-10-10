@@ -1,0 +1,114 @@
+import express from 'express';
+import cors from 'cors';
+import dotenv from 'dotenv';
+dotenv.config();
+const app = express();
+app.use(express.json());
+app.use(cors());
+ const TODO_LIST=[
+        {
+            id:1,
+            task:"Learn",
+            done:false,
+            createdAt: new Date().toISOString(),
+            priority:"high",
+            emoji: "📚",
+        },
+        {
+            id:2,
+            task:"Build",
+            done:false,
+            createdAt: new Date().toISOString(),
+            priority:"medium",
+            emoji: "🛠️",
+        }
+    ]
+
+app.get("/todos/search", (req, res) => {
+    const { task, priority } = req.query;
+    if (!task || !priority) {
+        return res.status(400).json({
+            success: false,
+            message: "Missing query parameters 'task' or 'priority'",
+        });
+    }
+    const filteredTodos = TODO_LIST.filter(
+        (t) => t.task.toLowerCase().includes(task.toLowerCase()) && t.priority === priority     
+    );
+    res.json({
+        success: true,
+        data: filteredTodos,
+        message: "search results",
+    });
+})
+
+app.get("/todos/:id",(req,res)=>{
+        const id = parseInt(req.params.id);
+        const todo = TODO_LIST.find((t)=> t.id === id);
+        if(todo){
+            res.json({
+                success:true,
+                data:todo,
+                message:"todos item fetched successfully"
+            })
+        }else{
+            res.json({
+                success:false,
+                message:"not found"
+            })
+        }
+});
+
+app.get('/todos',(req,res)=>{
+    res.json ({
+        message: "Welcome to Todo API",
+        data: TODO_LIST
+    })
+})
+
+app.post('/todos',(req,res)=>{
+   
+const{task,priority,emoji}=req.body;
+
+
+const newTodo={
+    id: TODO_LIST.length + 1,   
+    task: task,
+    done: false,
+    createdAt: new Date().toISOString(),
+    priority: priority ,
+    emoji: emoji,
+}
+
+TODO_LIST.push(newTodo);
+
+   
+    res.status(201).json({
+        success:true,
+        message: "Todo created successfully",
+        data: TODO_LIST,
+    });
+});
+
+app.delete("/todos/delete/:id",(req,res)=>{
+    const id=req.params.id;
+    const index=TODO_LIST.findIndex((t)=>t.id==id);
+    if(index !== -1){
+        TODO_LIST.splice(index,1);
+        res.json({
+            success:true,
+            message:"Todo deleted successfully",
+            data:TODO_LIST,
+        });
+    }else{
+        res.status(404).json({
+            success:false,  
+            message:"Todo not found",
+        });
+    }
+}); 
+const PORT=process.env.PORT || 5003;
+
+app.listen(PORT,()=>{
+    console.log(`Server is running on port ${PORT}`);
+});
