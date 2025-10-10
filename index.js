@@ -107,6 +107,47 @@ app.delete("/todos/delete/:id",(req,res)=>{
         });
     }
 }); 
+
+
+app.put("/todos/update/:id",(req,res)=>{
+    const id=req.params.id;
+    const {task,priority,emoji,done}=req.body;
+    const todo=TODO_LIST.find((t)=>t.id==id);
+    if(todo){
+        todo.task=task;
+        todo.priority=priority;
+        todo.emoji=emoji;
+        todo.done=done;
+        res.json({
+            success:true,
+            message:"Todo updated successfully",
+            data:TODO_LIST,
+        });
+    }else{
+        res.status(404).json({
+            success:false,
+            message:"Todo not found",
+        });
+    }
+});
+app.patch("/todos/mark-done/:id",(req,res)=>{
+    const id=req.params.id;
+    const todo=TODO_LIST.find((t)=>t.id==id);
+    if(todo){
+        todo.done=true;
+        res.json({
+            success:true,
+            message:"Todo marked as done",
+            data:TODO_LIST,
+        });
+    }else{
+        res.status(404).json({
+            success:false,
+            message:"Todo not found",
+        });
+    }
+});
+
 const PORT=process.env.PORT || 5003;
 
 app.listen(PORT,()=>{
