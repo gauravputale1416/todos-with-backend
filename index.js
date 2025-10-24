@@ -173,7 +173,28 @@ app.patch("/todos/mark-done/:id",(req,res)=>{
         });
     }
 });
-
+app.patch("/todos/:id/status",(req,res)=>{
+    const id = parseInt(req.params.id);
+    const { done } = req.body;
+    const todo = TODO_LIST.find((t) => t.id === id);
+    if (!todo) {
+        return res.status(404).json({
+            success: false,
+            message: "Todo not found",
+        });
+    }
+    if (typeof done === "boolean") {
+        todo.done = done;
+    } else {
+        // toggle if no explicit boolean provided
+        todo.done = !todo.done;
+    }
+    res.json({
+        success: true,
+        message: "Todo status updated",
+        data: TODO_LIST,
+    });
+});
 const PORT=process.env.PORT || 5003;
 
 app.listen(PORT,()=>{
