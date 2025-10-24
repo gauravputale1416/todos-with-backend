@@ -40,13 +40,22 @@ app.use(cors());
             ,
         }
     ]
+app.get("/health",(req,res)=>{
+res.json({
+    success:true,
+    message:"server is healthy"
+
+});
+});
+
 
 app.get("/todos/search", (req, res) => {
     const { task, priority } = req.query;
     if (!task || !priority) {
         return res.status(400).json({
             success: false,
-            message: "Missing query parameters 'task' or 'priority'",
+            message: "Missing query parameters 'task' or 'priority'"
+            ,
         });
     }
     const filteredTodos = TODO_LIST.filter(
