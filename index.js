@@ -17,7 +17,7 @@ app.use(cors());
         {
             id:2,
             task:"Build",
-            done:false,
+            done:true,
             createdAt: new Date().toISOString(),
             priority:"medium",
             emoji: "🛠️",
